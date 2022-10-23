@@ -11,7 +11,7 @@ interface jwtBase {
 }
 
 const verifyToken = (roles: Role[]) => (req: Request, res: Response, next: NextFunction) => {
-    const token: string | undefined = req.headers["authentication"]?.toString();
+    let token: string | undefined = req.headers["authentication"]?.toString();
 
     if (!token) {
         return res.status(403).send("A token is required for authentication");
@@ -19,7 +19,7 @@ const verifyToken = (roles: Role[]) => (req: Request, res: Response, next: NextF
 
     try {
         // 'Bearer ..............'
-        token = token.substring("Bearer ".length);
+         token = token.substring("Bearer ".length);
         const decoded: string | JwtPayload = jwt.verify(token, TOKEN_SECRET);
         if (roles.indexOf((decoded as jwtBase).userData.roleId) === -1) {
             return res.sendStatus(401);
